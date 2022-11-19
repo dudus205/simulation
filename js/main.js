@@ -1,9 +1,3 @@
-/*
-*    main.js
-*    Mastering Data Visualization with D3.js
-*    6.7 - jQuery UI slider
-*/
-
 const MARGIN = { LEFT: 100, RIGHT: 10, TOP: 10, BOTTOM: 100 }
 const WIDTH = 800 - MARGIN.LEFT - MARGIN.RIGHT
 const HEIGHT = 500 - MARGIN.TOP - MARGIN.BOTTOM
@@ -103,23 +97,24 @@ continents.forEach((continent, i) => {
     .style("text-transform", "capitalize")
     .text(continent)
 })
-
-d3.json("data/data.json").then(function(data){
-	// clean data
-	formattedData = data.map(year => {
-		return year["countries"].filter(country => {
-			const dataExists = (country.income && country.life_exp)
-			return dataExists
-		}).map(country => {
-			country.income = Number(country.income)
-			country.life_exp = Number(country.life_exp)
-			return country
+function load_data() {
+	d3.json("data/data.json").then(function (data) {
+		// clean data
+		formattedData = data.map(year => {
+			return year["countries"].filter(country => {
+				const dataExists = (country.income && country.life_exp)
+				return dataExists
+			}).map(country => {
+				country.income = Number(country.income)
+				country.life_exp = Number(country.life_exp)
+				return country
+			})
 		})
-	})
 
-	// first run of the visualization
-	update(formattedData[0])
-})
+		// first run of the visualization
+		update(formattedData[0])
+	})
+}
 
 function step() {
 	// at the end of our data, loop back
