@@ -13,6 +13,12 @@ let time = 0
 let interval
 let formattedData
 
+let xDomainMin = 120
+let xDomainMax = 150000
+
+let yDomainMin = 0
+let yDomainMax = 90
+
 // Tooltip
 const tip = d3.tip()
   .attr('class', 'd3-tip')
@@ -27,17 +33,34 @@ const tip = d3.tip()
 g.call(tip)
 
 // Scales
-const x = d3.scaleLog()
+let x = d3.scaleLog()
 	.base(10)
 	.range([0, WIDTH])
-	.domain([142, 150000])
-const y = d3.scaleLinear()
+	.domain([xDomainMin, xDomainMax])
+let y = d3.scaleLinear()
 	.range([HEIGHT, 0])
-	.domain([0, 90])
+	.domain([yDomainMin, yDomainMax])
 const area = d3.scaleLinear()
 	.range([25*Math.PI, 1500*Math.PI])
 	.domain([2000, 1400000000])
 const continentColor = d3.scaleOrdinal(d3.schemePastel1)
+
+// Y Axis
+let yAxisCall = d3.axisLeft(y)
+
+g.append("g")
+	.attr("class", "y axis")
+	.call(yAxisCall)
+// X Axis
+let xAxisCall = d3.axisBottom(x)
+	.tickValues([400, 4000, 40000])
+	.tickFormat(d3.format("$"));
+
+g.append("g")
+	.attr("class", "x axis")
+	.attr("transform", `translate(0, ${HEIGHT})`)
+	.call(xAxisCall)
+
 
 // Labels
 const xLabel = g.append("text")
@@ -61,20 +84,6 @@ const timeLabel = g.append("text")
 	.attr("text-anchor", "middle")
 	.text("1800")
 
-// X Axis
-const xAxisCall = d3.axisBottom(x)
-	.tickValues([400, 4000, 40000])
-	.tickFormat(d3.format("$"));
-g.append("g")
-	.attr("class", "x axis")
-	.attr("transform", `translate(0, ${HEIGHT})`)
-	.call(xAxisCall)
-
-// Y Axis
-const yAxisCall = d3.axisLeft(y)
-g.append("g")
-	.attr("class", "y axis")
-	.call(yAxisCall)
 
 const continents = ["europe", "asia", "americas", "africa"]
 
